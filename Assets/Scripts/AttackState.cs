@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class AttackState : IEnemyState
 {
-    private KnightEnemy enemy;
+    private BaseEnemy enemy;
     private Transform player;
 
-    private float attackCooldown = 2f;
-    private float cooldownTimer = 0f;
-
     private bool isAttacking = false;
-    public bool IsAttacking
+    public bool IsAttackingLocal
     {
         get { return isAttacking; }
         set
@@ -20,7 +17,7 @@ public class AttackState : IEnemyState
         }
     }
 
-    public AttackState(KnightEnemy enemy)
+    public AttackState(BaseEnemy enemy)
     {
         this.enemy = enemy;
         player = enemy.GetPlayer();
@@ -28,55 +25,74 @@ public class AttackState : IEnemyState
 
     public void Enter()
     {
+        //Debug.Log("AttackState Enter");
         isAttacking = false;
-        cooldownTimer = attackCooldown; // Đánh ngay lần đầu
     }
 
     public void Execute()
     {
-        if (isAttacking)
-        {
-            enemy.rb.linearVelocity = Vector2.zero;
-            return;
-        }
-
-        cooldownTimer += Time.fixedDeltaTime;
+        //if (isAttacking)
+        //{
+        //    enemy.rb.linearVelocity = Vector2.zero;
+        //    return;
+        //}
         enemy.rb.linearVelocity = Vector2.zero;
         FacePlayer();
-
-        if (enemy.CooldownTimer >= enemy.AttackCooldown)
+        if (enemy.GetCooldownTimer() >= enemy.GetAttackCooldown())
         {
-            enemy.CooldownTimer = 0f; // reset cooldown khi bắt đầu đánh
-            IsAttacking = true;
+            enemy.ResetCooldown();
+            IsAttackingLocal = true;
             enemy.GetEnemyAnimator()?.SetTrigger(AnimationUtilities.ATTACK);
+            if (enemy is IRangedEnemy rangedEnemy)
+            {
+                Transform weaponMountPoint = rangedEnemy.GetWeaponMountPoint();
+                if (weaponMountPoint == null)
+                {
+                    Debug.LogError("Weapon mount point is not assigned for this enemy.");
+                    return;
+                }
+
+                Transform arrowTransform = ObjectPoolManager.Instance.SpawnObject("Arrow", weaponMountPoint.position, Quaternion.identity);
+                if (arrowTransform != null && arrowTransform.TryGetComponent<IWeaponRanged>(out var arrow))
+                {
+                    float direction = enemy.transform.localScale.x > 0 ? 1f : -1f;
+                    arrow.Initialize(weaponMountPoint.position, direction);
+                }
+            }
+            else
+            {
+                Debug.Log("Enemy does not implement IRangedEnemy.");
+            }
         }
     }
 
     public void Exit()
     {
+        //Debug.Log("AttackState Exit");
         isAttacking = false;
-        cooldownTimer = 0f;
     }
 
     public void OnAttackAnimationFinished()
     {
-        isAttacking = false;
-
+        //Debug.Log("Call event when finish attack animation");
+        IsAttackingLocal = false;
+        enemy.ResetCooldown();
         if (enemy.IsPlayerInAttackZone())
         {
-            // Player vẫn trong vùng tấn công → tiếp tục attack
+            //Debug.Log("Attack");
+            enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, false);
             return;
         }
 
         if (enemy.PlayerInSight() && !isAttacking)
         {
-            // Player đã rời vùng attack, nhưng vẫn trong khu vực → đuổi theo
-            enemy.ChangeState(new ChaseState(enemy));
+            //Debug.Log("Chase");
+            enemy.GetStateMachine().ChangeState(new ChaseState(enemy));
         }
         else
         {
-            // Player biến khỏi khu vực → quay lại tuần tra
-            enemy.ChangeState(new PatrolState(enemy, enemy.leftLimitPos, enemy.rightLimitPos, enemy.patrolIdleTime));
+            //Debug.Log("Patrol");
+            enemy.GetStateMachine().ChangeState(new PatrolState(enemy));
         }
     }
 

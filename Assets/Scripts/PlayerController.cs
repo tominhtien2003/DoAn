@@ -1,8 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : BasePlayer
 {
+    [SerializeField] private PlayerAttackZone attackZone;
+    private bool isInAttackZone;
+    private BaseEnemy currentEnemy;
+    public bool IsMovementLocked { get; private set; }
     private TouchingDirection touchingDirection;
 
     private bool isMoving = false;
@@ -79,12 +83,22 @@ public class PlayerController : BasePlayer
         base.Awake();
         touchingDirection = GetComponent<TouchingDirection>();
     }
+    private void Start()
+    {
+        if (attackZone != null)
+            attackZone.OnEnemyZoneChanged += (s, e) =>
+            {
+                isInAttackZone = e.IsEnemyInZone;
+                currentEnemy = e.EnemyObject?.transform.parent.GetComponent<BaseEnemy>();
+            };
+    }
     private void FixedUpdate()
     {
         HandleMovement();
     }
     private void HandleMovement()
     {
+        if (IsMovementLocked) return;
         rb.linearVelocity = new Vector2(moveDirection.x * CurrentSpeed, rb.linearVelocity.y);
 
         playerAnimator.SetFloat(AnimationUtilities.Y_VELOCITY,rb.linearVelocity.y);
@@ -100,6 +114,7 @@ public class PlayerController : BasePlayer
     }
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (IsMovementLocked) return;
         moveDirection = context.ReadValue<Vector2>();
         IsMoving = moveDirection != Vector2.zero;
         Flip();
@@ -128,6 +143,29 @@ public class PlayerController : BasePlayer
         if (context.started)
         {
             playerAnimator.SetTrigger(AnimationUtilities.ATTACK);
+        }
+    }
+    public void LockMovement()
+    {
+        //Debug.Log("Locking movement");
+        IsMovementLocked = true;
+        rb.linearVelocity = Vector2.zero; 
+    }
+    public void UnlockMovement()
+    {
+        //Debug.Log("Unlocking movement");
+        IsMovementLocked = false;
+    }
+    public bool IsEnemyInAttackZone()
+    {
+        return isInAttackZone;
+    }
+    public void ApplyDamageToEnemy()
+    {
+        if (currentEnemy!=null && currentEnemy.TryGetComponent<IDamageable>(out var enemyHealth))
+        {
+            //Debug.Log("Apply damage to player");
+            enemyHealth.TakeDamage(10);
         }
     }
 }

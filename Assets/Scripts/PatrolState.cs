@@ -7,16 +7,24 @@ public class PatrolState : IEnemyState
     private bool isWaiting;
     private float idleTimer;
 
-    public PatrolState(BaseEnemy enemy, float left, float right, float idleDuration)
+    public PatrolState(BaseEnemy enemy)
     {
         this.enemy = enemy;
-        leftLimit = left;
-        rightLimit = right;
-        this.idleDuration = idleDuration;
+        if (enemy is IPatrolEnemy patrolEnemy)
+        {
+            leftLimit = patrolEnemy.GetLeftLimit();
+            rightLimit = patrolEnemy.GetRightLimit();
+            idleDuration = patrolEnemy.GetIdleDuration();
+        }
+        else
+        {
+            Debug.LogError("Enemy không implement IPatrolEnemy.");
+        }
     }
 
     public void Enter()
     {
+        //Debug.Log("PatrolState Enter");
         isWaiting = false;
         idleTimer = 0f;
         enemy.MoveDirection = Mathf.Sign(enemy.transform.localScale.x);
@@ -52,6 +60,7 @@ public class PatrolState : IEnemyState
 
     public void Exit()
     {
+        //Debug.Log("PatrolState Exit");
         enemy.rb.linearVelocity = Vector2.zero;
         SetWalkingAnimation(false);
     }

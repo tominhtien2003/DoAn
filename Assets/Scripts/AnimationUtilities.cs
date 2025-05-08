@@ -13,6 +13,10 @@ public class AnimationUtilities
     public static string IS_CEILING = "IsCeiling";
 
     public static string ATTACK = "Attack";
+    public static string ATTACK_MELEE = "AttackMelee";
 
     public static string CAN_MOVE = "CanMove";
+    public static string HURT = "Hurt";
+    public static string DIE = "Die";
+    public static string ACTIVATE = "Activate";
 }

@@ -1,94 +1,96 @@
 ﻿using UnityEngine;
 
-public class KnightEnemy : BaseEnemy
+public class KnightEnemy : BaseEnemy , IPatrolEnemy
 {
-    private IEnemyState currentState;
     [SerializeField] private Transform player;
-    [SerializeField] private KnightAttackZone attackZone;
+    [SerializeField] private EnemyAttackZone attackZone;
+    private EnemyStateMachine stateMachine;
+
     public Transform pointLeftLimit, pointRightLimit;
-    public float leftLimitPos { get; set; }
-    public float rightLimitPos { get; set; }
     public float patrolIdleTime = 1f;
-
-    public bool IsAttacking { get; set; }
-    public float AttackCooldown = 2f;
-    public float CooldownTimer { get; set; }
-
     private bool isInAttackZone;
+
+    public float leftLimitPos { get;private set; }
+    public float rightLimitPos { get; private set; }
+    public override bool IsAttacking { get; set; }
+    public float AttackCooldown = 2f;
+    private float cooldownTimer;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
+
     private void Start()
+    {
+        stateMachine = new EnemyStateMachine(this);
+
+        cooldownTimer = AttackCooldown;
+        SetLeftRight();
+
+        stateMachine.ChangeState(new PatrolState(this));
+        if (attackZone != null)
+            attackZone.OnPlayerZoneChanged += (s, e) => isInAttackZone = e.IsPlayerInZone;
+    }
+
+    private void FixedUpdate()
+    {
+        cooldownTimer += Time.fixedDeltaTime;
+
+        if (IsHurting)
+        {
+            return;
+        }
+        if (IsAttacking) return;
+
+        if (isInAttackZone)
+            stateMachine.ChangeState(new AttackState(this));
+        else if (PlayerInSight())
+            stateMachine.ChangeState(new ChaseState(this));
+        else
+            stateMachine.ChangeState(new PatrolState(this));
+
+        stateMachine.Update();
+    }
+    private void SetLeftRight()
     {
         leftLimitPos = pointLeftLimit.position.x;
         rightLimitPos = pointRightLimit.position.x;
-
-        CooldownTimer = AttackCooldown;
-
-        ChangeState(new PatrolState(this, leftLimitPos, rightLimitPos, patrolIdleTime));
-        if (attackZone != null)
-        {
-            attackZone.OnPlayerZoneChanged += AttackZone_OnPlayerZoneChanged;
-        }
     }
-
-    private void AttackZone_OnPlayerZoneChanged(object sender, KnightAttackZone.PlayerZoneChangedEventArgs e)
+    public override EnemyType EnemyType => EnemyType.Knight;
+    public override Transform GetPlayer() => player;
+    public override bool PlayerInSight() => player.position.x >= leftLimitPos && player.position.x <= rightLimitPos;
+    public override bool IsPlayerInAttackZone() => isInAttackZone;
+    public override float GetAttackCooldown() => AttackCooldown;
+    public override float GetCooldownTimer() => cooldownTimer;
+    public override void ResetCooldown() => cooldownTimer = 0f;
+    public override EnemyStateMachine GetStateMachine() => stateMachine;
+    public override void OnAttackAnimationFinished()
     {
-        isInAttackZone = e.IsPlayerInZone;
-    }
-    private void FixedUpdate()
-    {
-        CooldownTimer += Time.fixedDeltaTime;
-
-        if (isInAttackZone)
-        {
-            if (!(currentState is AttackState))
-            {
-                ChangeState(new AttackState(this));
-            }
-        }
-        else if (PlayerInSight() && !IsAttacking)
-        {
-            if (!(currentState is ChaseState))
-            {
-                ChangeState(new ChaseState(this));
-            }
-        }
-        else
-        {
-            if (!(currentState is PatrolState))
-            {
-                ChangeState(new PatrolState(this, leftLimitPos, rightLimitPos, patrolIdleTime));
-            }
-        }
-
-        currentState?.Execute();
-    }
-    public void ChangeState(IEnemyState newState)
-    {
-        currentState?.Exit();
-        currentState = newState;
-        currentState.Enter();
-    }
-    public bool PlayerInSight()
-    {
-        if (player.position.x >= leftLimitPos && player.position.x <= rightLimitPos)
-        {
-            return true;
-        }
-        return false;
-    }
-    public bool IsPlayerInAttackZone()
-    {
-        return attackZone != null && attackZone.isPlayerInZone;
-    }
-    public void OnAttackAnimationFinished()
-    {
-        if (currentState is AttackState attackState)
-        {
+        if (stateMachine.GetCurrentState() is AttackState attackState)
             attackState.OnAttackAnimationFinished();
+    }
+
+    public float GetLeftLimit()
+    {
+        return leftLimitPos;
+    }
+
+    public float GetRightLimit()
+    {
+        return rightLimitPos;
+    }
+
+    public float GetIdleDuration()
+    {
+        return patrolIdleTime;
+    }
+
+    public override void ApplyDamageToPlayer()
+    {
+        if (player.TryGetComponent<IDamageable>(out var playerHealth))
+        {
+            //Debug.Log("Apply damage to player");
+            playerHealth.TakeDamage(10);
         }
     }
-    public Transform GetPlayer() => player;
 }

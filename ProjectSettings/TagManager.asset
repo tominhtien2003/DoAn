@@ -2,8 +2,12 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Arrow
+  - Ground
+  - Obstacle
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -12,9 +16,9 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
+  - Enemy
+  - Weapon
+  - Trap
   - 
   - 
   - 
@@ -44,21 +48,29 @@ TagManager:
   - name: Mountain
     uniqueID: 4135149487
     locked: 0
-  - name: Cloudy
-    uniqueID: 56386263
-    locked: 0
   - name: Hills
     uniqueID: 324020785
     locked: 0
   - name: Forest
     uniqueID: 2390000469
     locked: 0
+  - name: Cloudy
+    uniqueID: 56386263
+    locked: 0
   - name: Background
     uniqueID: 3207182349
+    locked: 0
+  - name: Player
+    uniqueID: 909983723
     locked: 0
   - name: Platform
     uniqueID: 3551268571
     locked: 0
+  - name: Trap
+    uniqueID: 3869288995
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 public class ChaseState : IEnemyState
 {
-    private KnightEnemy enemy;
+    private BaseEnemy enemy;
     private Transform player;
 
-    public ChaseState(KnightEnemy enemy)
+    public ChaseState(BaseEnemy enemy)
     {
         this.enemy = enemy;
         player = enemy.GetPlayer();
@@ -12,26 +12,41 @@ public class ChaseState : IEnemyState
 
     public void Enter()
     {
+        //Debug.Log("ChaseState Enter");
         enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, true);
     }
 
     public void Execute()
     {
-        if (!enemy.PlayerInSight())
+        if (enemy.IsAttacking)
         {
-            enemy.ChangeState(new PatrolState(enemy, enemy.leftLimitPos, enemy.rightLimitPos, enemy.patrolIdleTime));
+            enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, false);
             return;
         }
-
-        float dir = Mathf.Sign(player.position.x - enemy.transform.position.x);
-        enemy.MoveDirection = dir;
-        enemy.FaceDirection(dir);
-
+        if (!enemy.PlayerInSight())
+        {
+            enemy.GetStateMachine().ChangeState(new PatrolState(enemy));
+            return;
+        }
+        float distance = player.position.x - enemy.transform.position.x;
+        float dir = 0f;
+        if (Mathf.Abs(distance) > 0.1f)
+        {
+            dir = Mathf.Sign(distance);
+            enemy.MoveDirection = dir;
+            enemy.FaceDirection(dir);
+            enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, true);
+        }
+        else
+        {
+            enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, false);
+        }
         enemy.rb.linearVelocity = new Vector2(enemy.GetWalkSpeed() * dir, enemy.rb.linearVelocity.y);
     }
 
     public void Exit()
     {
+        //Debug.Log("ChaseState Exit");   
         enemy.rb.linearVelocity = Vector2.zero;
         enemy.GetEnemyAnimator()?.SetBool(AnimationUtilities.IS_WALKING, false);
     }
