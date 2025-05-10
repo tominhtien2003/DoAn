@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5109096026919778946}
   - component: {fileID: 8037843936081186701}
   - component: {fileID: 5008941813254113682}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SpearTrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 2341418084296814227}
   - component: {fileID: 2856366715113148600}
   - component: {fileID: 1812195715127122087}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

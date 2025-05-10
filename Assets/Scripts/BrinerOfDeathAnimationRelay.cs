@@ -3,8 +3,18 @@ using UnityEngine;
 public class BrinerOfDeathAnimationRelay : MonoBehaviour
 {
     [SerializeField] private BrinerofDeathBoss boss;
-    public void OnMeleeAttackAnimationFinished()
+    public void OnCheckPlayer()
     {
-        boss?.OnMeleeAttackAnimationFinished();
+        if (boss.IsInMeleeAttackZone())
+        {
+            boss.ApplyDamageToPlayerByMeleeAttack();
+        }
+    }
+    public void OnMeleeAttackEnd()
+    {
+        boss.IsAttacking = false;
+    }
+    public void OnMagicAttackEnd()
+    {
     }
 }

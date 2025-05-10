@@ -10,9 +10,7 @@ public class BasePlayer : MonoBehaviour
 
     [SerializeField] protected Transform playerGFX;
     [SerializeField] protected float moveSpeed;
-    [SerializeField] protected float runSpeed;
     [SerializeField] protected float jumpImpulse;
-    [SerializeField] protected float airSpeed;
 
     public virtual void Awake()
     {

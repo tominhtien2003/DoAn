@@ -63,7 +63,7 @@ public class SpikeTrap : IStationaryTrap
         {
             if (IsPlayer(hit.gameObject))
             {
-                ApplyDamageTo(hit.transform.parent.gameObject);
+                ApplyDamageTo(hit.gameObject);
             }
         }
     }

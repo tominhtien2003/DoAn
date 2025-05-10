@@ -61,7 +61,7 @@ public class AttackState : IEnemyState
             }
             else
             {
-                Debug.Log("Enemy does not implement IRangedEnemy.");
+                //Debug.Log("Enemy does not implement IRangedEnemy.");
             }
         }
     }

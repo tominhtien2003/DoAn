@@ -14,7 +14,7 @@ public class SurikenTrap : IMovingTrap
     {
         if (IsPlayer(collision.gameObject))
         {
-            ApplyDamageTo(collision.transform.parent.gameObject);
+            ApplyDamageTo(collision.gameObject);
         }
     }
 }

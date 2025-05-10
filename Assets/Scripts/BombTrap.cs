@@ -35,7 +35,7 @@ public class BombTrap : IStationaryTrap
         {
             if (IsPlayer(hit.gameObject))
             {
-                ApplyDamageTo(hit.transform.parent.gameObject);
+                ApplyDamageTo(hit.gameObject);
             }
         }
     }

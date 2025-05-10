@@ -2,64 +2,45 @@ using UnityEngine;
 
 public class TouchingDirection : MonoBehaviour
 {
-    [SerializeField] private CapsuleCollider2D playerCollider;
+    [Header("References")]
+    private CapsuleCollider2D playerCollider;
     [SerializeField] private Animator playerAnimator;
+
+    [Header("Settings")]
     [SerializeField] private ContactFilter2D castFilter;
-    [SerializeField] private float groundDistance = .05f;
-    [SerializeField] private float wallDistance = .2f;
-    [SerializeField] private float ceilingDistance = .05f;
+    [SerializeField] private float groundDistance = 0.05f;
+    [SerializeField] private float wallDistance = 0.2f;
+    [SerializeField] private float ceilingDistance = 0.05f;
 
-    private RaycastHit2D[] groundHits = new RaycastHit2D[5];
-    private RaycastHit2D[] wallHits = new RaycastHit2D[5];
-    private RaycastHit2D[] ceilingHits = new RaycastHit2D[5];
+    private RaycastHit2D[] hits = new RaycastHit2D[5];
 
-    private Vector2 checkDirectionPlayer => transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+    public bool IsGround { get; private set; }
+    public bool IsWall { get; private set; }
+    public bool IsCeiling { get; private set; }
 
-    private bool isGround;
-    public bool IsGround 
+    private Vector2 CheckDirection => transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+    private void Awake()
     {
-        get
-        {
-            return isGround;
-        }
-        private set
-        {
-            isGround = value;
-            playerAnimator.SetBool(AnimationUtilities.IS_GROUND, value);
-        }
-    }
-    private bool isWall;
-
-    public bool IsWall
-    {
-        get
-        {
-            return isWall;
-        }
-        private set
-        {
-            isWall = value;
-            playerAnimator.SetBool(AnimationUtilities.IS_WALL, value);
-        }
-    }
-    private bool isCeiling;
-
-    public bool IsCeiling
-    {
-        get
-        {
-            return isCeiling;
-        }
-        private set
-        {
-            isCeiling = value;
-            playerAnimator.SetBool(AnimationUtilities.IS_CEILING, value);
-        }
+        playerCollider = GetComponent<CapsuleCollider2D>();
     }
     private void FixedUpdate()
     {
-        IsGround = playerCollider.Cast(Vector2.down, castFilter, groundHits, groundDistance) > 0;
-        IsWall = playerCollider.Cast(checkDirectionPlayer, castFilter, wallHits, wallDistance) > 0;
-        IsCeiling = playerCollider.Cast(Vector2.up, castFilter, ceilingHits, ceilingDistance) > 0;
+        IsGround = Check(Vector2.down, groundDistance);
+        IsWall = Check(CheckDirection, wallDistance);
+        IsCeiling = Check(Vector2.up, ceilingDistance);
+
+        UpdateAnimator();
+    }
+
+    private bool Check(Vector2 direction, float distance)
+    {
+        return playerCollider.Cast(direction, castFilter, hits, distance) > 0;
+    }
+
+    private void UpdateAnimator()
+    {
+        playerAnimator.SetBool(AnimationUtilities.IS_GROUND, IsGround);
+        playerAnimator.SetBool(AnimationUtilities.IS_WALL, IsWall);
+        playerAnimator.SetBool(AnimationUtilities.IS_CEILING, IsCeiling);
     }
 }

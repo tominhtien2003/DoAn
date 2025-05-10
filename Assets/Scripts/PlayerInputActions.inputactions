@@ -27,16 +27,7 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "7719c865-67e4-4be5-b0f5-497dd6be58d2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Run",
-                    "type": "Button",
-                    "id": "84b00ecf-dae0-4f9a-9fb6-e9e01ec00af9",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -45,7 +36,25 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "5d16e1c6-ba95-48f5-80a2-687d12aaa343",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "901cef57-1cd3-4d06-8263-6417e8f08b81",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Croach",
+                    "type": "Button",
+                    "id": "d2b53a13-9d30-4870-8049-56dac2ab4159",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -230,28 +239,6 @@
                 },
                 {
                     "name": "",
-                    "id": "691b8ae8-c505-4a89-a463-f29fbba293ac",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5ea684ec-e96d-41c1-9b30-a44764f5e976",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "afb5341d-7b46-4ee4-83f4-4bbe1ac7a865",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -269,6 +256,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4d56dc9-c9d3-41eb-9dff-922b55d5d84a",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e5d4995-388b-4aff-a4d2-9c60541e1220",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Croach",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

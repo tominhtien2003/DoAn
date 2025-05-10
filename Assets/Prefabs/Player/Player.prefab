@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3609705910662830607
 Transform:
   m_ObjectHideFlags: 0
@@ -53,10 +53,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 0}
   rb: {fileID: 0}
   playerGFX: {fileID: 8330772687311541569}
-  moveSpeed: 5
-  runSpeed: 7
+  moveSpeed: 3
   jumpImpulse: 6.5
-  airSpeed: 5
   attackZone: {fileID: 3867177881102163439}
 --- !u!114 &7041060653823516295
 MonoBehaviour:
@@ -163,22 +161,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7407865496149534321}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnRun
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 84b00ecf-dae0-4f9a-9fb6-e9e01ec00af9
-    m_ActionName: 'Player/Run[/Keyboard/leftShift]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7407865496149534321}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
@@ -208,7 +190,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -235,7 +217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b58dd047c225844b01f451fedc1383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCollider: {fileID: 6821569061262539944}
   playerAnimator: {fileID: 4633201111424990089}
   castFilter:
     useTriggers: 0
@@ -280,7 +261,7 @@ GameObject:
   - component: {fileID: 5531044754059832341}
   - component: {fileID: 4281336473854844459}
   - component: {fileID: 3867177881102163439}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: AttackZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -439,8 +420,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 909983723
+  m_SortingLayer: -3
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: af66604297bf5344eab5306f0244705c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -509,8 +490,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.27313754}
-  m_Size: {x: 0.57, y: 1.6696694}
+  m_Offset: {x: -0.014414787, y: -0.26119664}
+  m_Size: {x: 0.5872822, y: 1.6457878}
   m_Direction: 0
 --- !u!114 &7313586399249496267
 MonoBehaviour:

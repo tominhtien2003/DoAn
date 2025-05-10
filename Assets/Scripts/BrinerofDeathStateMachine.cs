@@ -2,31 +2,35 @@ using UnityEngine;
 
 public class BrinerofDeathStateMachine
 {
-    private IEnemyState currentState;
-    private BrinerofDeathBoss deathBoss;
+    private BrinerofDeathState currentState;
+    private BrinerofDeathBoss brinerofDeathBoss;
 
-    public BrinerofDeathStateMachine(BrinerofDeathBoss deathBoss)
+    public BrinerofDeathStateMachine(BrinerofDeathBoss brinerofDeathBoss)
     {
-        this.deathBoss = deathBoss;
+        this.brinerofDeathBoss = brinerofDeathBoss;
+    }
+
+    public void ChangeState(BrinerofDeathState newState)
+    {
+        if (currentState != null && currentState.GetType() == newState.GetType()) return;
+        if (currentState != null)
+        {
+            currentState.Exit();
+        }
+
+        currentState = newState;
+        currentState.Enter();
     }
 
     public void Update()
     {
-        currentState?.Execute();
+        if (currentState != null)
+        {
+            currentState.Update();
+        }
     }
-
-    public void ChangeState(IEnemyState newState)
+    public BrinerofDeathState GetCurrentState()
     {
-        if (currentState != null && currentState.GetType() == newState.GetType()) return;
-        currentState?.Exit();
-        currentState = newState;
-        currentState.Enter();
+        return currentState;
     }
-    public void ExitCurrentState()
-    {
-        currentState?.Exit();
-        currentState = null;
-    }
-    public IEnemyState GetCurrentState() => currentState;
-    public BrinerofDeathBoss GetBoss() => deathBoss;
 }

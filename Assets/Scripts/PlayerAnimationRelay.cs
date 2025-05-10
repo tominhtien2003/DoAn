@@ -1,24 +1,27 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerAnimationRelay : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     public void EndHurt()
     {
-        playerController?.UnlockMovement();
-        playerController?.playerAnimator.SetBool(AnimationUtilities.CAN_MOVE, true);
+        if (playerController != null)
+        {
+            playerController.ResetStates();
+        }
     }
-    public void StartHurt()
-    {
-        playerController?.LockMovement();
-        playerController?.playerAnimator.SetBool(AnimationUtilities.CAN_MOVE, false);
-    }
-    public void CheckEnemy()
+    public void OnCheckEnemy()
     {
         if (playerController != null && playerController.IsEnemyInAttackZone())
         {
-            //Debug.Log("Player is in attack zone");
             playerController.ApplyDamageToEnemy();
         }
+    }
+    public void OnAttackFinish()
+    {
+        StartCoroutine(playerController.AttackCooldown());
+        playerController.IsAttacking = false;
+        playerController.UnlockMovement();
     }
 }
