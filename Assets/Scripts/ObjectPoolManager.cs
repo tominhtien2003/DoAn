@@ -23,7 +23,7 @@ public class ObjectPoolManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
             return;
         }
     }

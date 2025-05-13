@@ -7,6 +7,7 @@ public class AnimationUtilities
     public static string IS_GROUND = "IsGround";
     public static string Y_VELOCITY = "Y_Velocity";
     public static string IS_DASHING = "IsDashing";
+    public static string TELEPORT = "Teleport";
 
     public static string JUMP = "Jump";
 
@@ -21,4 +22,7 @@ public class AnimationUtilities
     public static string HURT = "Hurt";
     public static string DIE = "Die";
     public static string ACTIVATE = "Activate";
+
+    // Ledge grab
+    public static string IS_LEDGE_GRABBING = "IsLedgeGrabbing";
 }

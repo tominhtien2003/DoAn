@@ -10,12 +10,16 @@ public class EnemyHealth : MonoBehaviour , IDamageable
     [SerializeField] private Image healthImage;
     private float currentHealth;
     private Coroutine hideHealthBarCoroutine;
+    private ItemDrop itemDrop;
     public bool IsDead => currentHealth <= 0;
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
 
     private void Awake()
     {
         currentHealth = maxHealth;
         SetHealthBarVisible(false);
+        itemDrop = GetComponent<ItemDrop>();
     }
 
     public void TakeDamage(float amount)
@@ -43,7 +47,13 @@ public class EnemyHealth : MonoBehaviour , IDamageable
 
     private void Die()
     {
-        Debug.Log("Enemy died.");
+        //Debug.Log("Enemy died.");
+
+        if (itemDrop != null)
+        {
+            Debug.Log("Enemy drop items.");
+            itemDrop.DropItems();
+        }
 
         animator?.SetTrigger(AnimationUtilities.DIE);
     }

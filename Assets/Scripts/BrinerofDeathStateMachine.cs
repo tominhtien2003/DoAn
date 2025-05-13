@@ -12,6 +12,7 @@ public class BrinerofDeathStateMachine
 
     public void ChangeState(BrinerofDeathState newState)
     {
+        if (newState == null) return;
         if (currentState != null && currentState.GetType() == newState.GetType()) return;
         if (currentState != null)
         {

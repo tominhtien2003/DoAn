@@ -24,4 +24,20 @@ public class PlayerAnimationRelay : MonoBehaviour
         playerController.IsAttacking = false;
         playerController.UnlockMovement();
     }
+    public void OnStartPlayerRunSFX()
+    {
+        if (!playerController.IsRunningAnimation)
+        {
+            playerController.IsRunningAnimation = true;
+            AudioManager.Instance.PlaySound("Run");
+        }
+    }
+    public void OnAttackSFX()
+    {
+        AudioManager.Instance.PlaySound("Attack");
+    }
+    public void OnHurtSFX()
+    {
+        AudioManager.Instance.PlaySound("Hurt");
+    }
 }

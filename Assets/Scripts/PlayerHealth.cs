@@ -32,13 +32,15 @@ public class PlayerHealth : MonoBehaviour , IDamageable
     public void Heal(float amount)
     {
         if (IsDead) return;
-
+        Debug.Log($"Player healed {amount} health. HP: {currentHealth}/{maxHealth}");
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        healthImage.fillAmount = currentHealth / maxHealth;
     }
 
     private void Die()
     {
         Debug.Log("Player died.");
+        AudioManager.Instance.PlaySound("Death");
         animator?.SetTrigger(AnimationUtilities.DIE);
     }
 }

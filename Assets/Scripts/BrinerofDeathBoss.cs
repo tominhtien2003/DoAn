@@ -11,7 +11,8 @@ public class BrinerofDeathBoss : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float attackCooldown = 2f;
+    [SerializeField] private float meleeAttackCooldown = 2f;
+    [SerializeField] private float darkOrbAttackCooldown = 3f;
 
     [Header("Attack Settings")]
     [SerializeField] private float meleeAttackRange = 5f;
@@ -19,26 +20,20 @@ public class BrinerofDeathBoss : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private GameObject darkOrbPrefab;
     [SerializeField] private int orbsPerAttack = 3;
-    [SerializeField] private float orbSpawnDelay;
-
-    [Header("Teleport Settings")]
-    [SerializeField] private float teleportCooldown = 5f;
-    [SerializeField] private float damageThresholdForTeleport = 100f;
-    [SerializeField] private Transform[] teleportPoints;
-    [SerializeField] private float teleportDelay = 0.5f;
-    [SerializeField] private GameObject teleportEffect;
+    [SerializeField] private float orbSpawnDelay = 0.2f;
 
     // State Machine
     private BrinerofDeathStateMachine stateMachine;
     private bool isInMeleeAttackZone = false;
-    private float cooldownTimer;
-    public bool IsDroppingDarkOrb = false;
-    private float teleportTimer;
-    private float damageSinceLastTeleport;
-    private bool isTeleporting;
+    private float meleeCooldownTimer;
+    private float darkOrbCooldownTimer;
+    public bool IsHurting;
+    private bool isDroppingDarkOrb;
 
     public bool IsAttacking { get; set; } = false;
-    public bool CanAttack => cooldownTimer >= attackCooldown;
+    public bool IsDroppingDarkOrb { get => isDroppingDarkOrb; set => isDroppingDarkOrb = value; }
+    public bool CanMeleeAttack => meleeCooldownTimer >= meleeAttackCooldown;
+    public bool CanDarkOrbAttack => darkOrbCooldownTimer >= darkOrbAttackCooldown;
 
     private void Awake()
     {
@@ -47,16 +42,17 @@ public class BrinerofDeathBoss : MonoBehaviour
 
     private void Start()
     {
-        cooldownTimer = attackCooldown;
-        teleportTimer = teleportCooldown;
+        meleeCooldownTimer = meleeAttackCooldown;
+        darkOrbCooldownTimer = darkOrbAttackCooldown;
         if (meleeAttackZone != null)
             meleeAttackZone.OnPlayerZoneChanged += MeleeAttackZone_OnPlayerZoneChanged;
     }
 
     private void Update()
     {
-        cooldownTimer += Time.deltaTime;
-        teleportTimer += Time.deltaTime;
+        meleeCooldownTimer += Time.deltaTime;
+        darkOrbCooldownTimer += Time.deltaTime;
+        if (IsHurting) return;
         UpdateState();
     }
 
@@ -64,26 +60,17 @@ public class BrinerofDeathBoss : MonoBehaviour
     {
         if (IsAttacking) return;
 
-        if (CanAttack)
-        {
-            if (CanMeleeAttack())
-            {
-                stateMachine.ChangeState(new BrinerofDeathMeleeAttackState(this));
-            }
-            else if (IsPlayerInDarkOrbRange())
-            {
-                stateMachine.ChangeState(new BrinerofDeathDarkOrbState(this));
-            }
-            else if (IsPlayerInMeleeRange())
-            {
-                stateMachine.ChangeState(new BrinerofDeathChaseState(this));
-            }
-            else
-            {
+        if (IsDroppingDarkOrb) return;
 
-            }
+        if (IsInMeleeAttackZone() && CanMeleeAttack)
+        {
+            stateMachine.ChangeState(new BrinerofDeathMeleeAttackState(this));
         }
-        else if (!CanMeleeAttack() && IsPlayerInMeleeRange())
+        else if (IsPlayerInDarkOrbRange() && CanDarkOrbAttack)
+        {
+            stateMachine.ChangeState(new BrinerofDeathDarkOrbState(this));
+        }
+        else if (IsPlayerInMeleeRange())
         {
             stateMachine.ChangeState(new BrinerofDeathChaseState(this));
         }
@@ -94,31 +81,6 @@ public class BrinerofDeathBoss : MonoBehaviour
 
         stateMachine.Update();
     }
-
-    private IEnumerator Teleport()
-    {
-        isTeleporting = true;
-        if (teleportEffect != null)
-            Instantiate(teleportEffect, transform.position, Quaternion.identity);
-
-        yield return new WaitForSeconds(teleportDelay);
-
-        // Select random teleport point
-        if (teleportPoints != null && teleportPoints.Length > 0)
-        {
-            Transform targetPoint = teleportPoints[Random.Range(0, teleportPoints.Length)];
-            transform.position = targetPoint.position;
-        }
-
-        if (teleportEffect != null)
-            Instantiate(teleportEffect, transform.position, Quaternion.identity);
-
-        // Reset teleport conditions
-        damageSinceLastTeleport = 0f;
-        teleportTimer = 0f;
-        isTeleporting = false;
-    }
-
     public void SpawnDarkOrbs()
     {
         StartCoroutine(SpawnOrbsSequence());
@@ -147,9 +109,9 @@ public class BrinerofDeathBoss : MonoBehaviour
             yield return new WaitForSeconds(orbSpawnDelay);
         }
 
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(darkOrbAttackCooldown);
         IsAttacking = false;
-        ResetCooldown();
+        ResetDarkOrbCooldown();
         IsDroppingDarkOrb = false;
     }
 
@@ -178,11 +140,12 @@ public class BrinerofDeathBoss : MonoBehaviour
     public Transform GetPlayer() => player;
     public BrinerofDeathStateMachine GetStateMachine() => stateMachine;
     public float GetMoveSpeed() => moveSpeed;
-    public float GetAttackCooldown() => attackCooldown;
-    public float GetCooldownTimer() => cooldownTimer;
-    public void ResetCooldown() => cooldownTimer = 0f;
-    public bool CanMeleeAttack() => isInMeleeAttackZone;
+    public float GetAttackCooldown() => darkOrbAttackCooldown;
+    public float GetCooldownTimer() => darkOrbCooldownTimer;
+    public void ResetCooldown() => darkOrbCooldownTimer = 0f;
     public bool IsInMeleeAttackZone() => isInMeleeAttackZone;
+    public void ResetMeleeCooldown() => meleeCooldownTimer = 0f;
+    public void ResetDarkOrbCooldown() => darkOrbCooldownTimer = 0f;
     #endregion
 
     private void MeleeAttackZone_OnPlayerZoneChanged(object sender, EnemyAttackZone.PlayerZoneChangedEventArgs e)

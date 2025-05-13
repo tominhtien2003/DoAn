@@ -8,6 +8,11 @@ public class PlayerController : BasePlayer
     [Header("Components")]
     [SerializeField] private PlayerAttackZone attackZone;
 
+    [Header("Jump Settings")]
+    [SerializeField] private int maxJumps = 2;
+    private int jumpsRemaining;
+    private bool wasGrounded;
+
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float dashDuration = 0.2f;
@@ -31,11 +36,12 @@ public class PlayerController : BasePlayer
 
     // Combat
     private bool isInAttackZone;
-    private BaseEnemy currentEnemy;
+    private IDamageable currentEnemy;
     private TouchingDirection touchingDirection;
     private float originalGravityScale;
     public bool CanAttack { get; set; } = true;
     public bool IsAttacking { get; set; } = false;
+    public bool IsRunningAnimation { get; set; } = false;
     [SerializeField] private float attackCooldown = 1f;
 
     private bool isWallSliding;
@@ -61,6 +67,8 @@ public class PlayerController : BasePlayer
         base.Awake();
         touchingDirection = GetComponent<TouchingDirection>();
         originalGravityScale = rb.gravityScale;
+        jumpsRemaining = maxJumps;
+        wasGrounded = true;
     }
 
     private void Start()
@@ -78,6 +86,23 @@ public class PlayerController : BasePlayer
         HandlePostDashDelay();
         HandleWallSlide();
         playerAnimator.SetFloat(AnimationUtilities.Y_VELOCITY, rb.linearVelocity.y);
+
+        // Reset jumps only when landing on ground
+        if (touchingDirection.IsGround && !wasGrounded)
+        {
+            jumpsRemaining = maxJumps;
+        }
+        wasGrounded = touchingDirection.IsGround;
+
+        if (Mathf.Abs(rb.linearVelocity.x) < 0.1f || 
+            !touchingDirection.IsGround || 
+            isDashing || 
+            IsAttacking || 
+            IsMovementLocked)
+        {
+            IsRunningAnimation = false;
+            AudioManager.Instance.StopSound("Run");
+        }
     }
 
     private void FixedUpdate()
@@ -89,7 +114,7 @@ public class PlayerController : BasePlayer
     #region Movement
     private void HandleMovement()
     {
-        if (IsMovementLocked && !isDashing) return;
+        if (IsMovementLocked) return;
 
         if (isDashing)
         {
@@ -117,7 +142,12 @@ public class PlayerController : BasePlayer
     #region Input Handlers
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (IsMovementLocked || isDashing || IsAttacking) return;
+        if (context.canceled)
+        {
+            IsMoving = false;
+            moveDirection = Vector2.zero;
+        }
+        //if (isDashing) return;
         moveDirection = context.ReadValue<Vector2>();
         IsMoving = moveDirection != Vector2.zero;
         Flip();
@@ -125,9 +155,11 @@ public class PlayerController : BasePlayer
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && touchingDirection.IsGround && !isDashing && !IsAttacking)
+        if (context.started && jumpsRemaining > 0 && !isDashing && !IsAttacking)
         {
+            jumpsRemaining--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpImpulse);
+            AudioManager.Instance.PlaySound("Jump");
         }
     }
 
@@ -218,10 +250,9 @@ public class PlayerController : BasePlayer
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Weapon"), false);
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Trap"), false);
         postDashDelayTimeLeft = postDashDelay;
-        LockMovement();
+        //LockMovement();
         playerAnimator.SetBool(AnimationUtilities.IS_DASHING, false);
-        moveDirection = Vector2.zero;
-        IsMoving = false;
+        //moveDirection = Vector2.zero;
     }
     #endregion
 
@@ -242,7 +273,7 @@ public class PlayerController : BasePlayer
     private void HandleEnemyZoneChanged(object sender, EnemyZoneChangedEventArgs e)
     {
         isInAttackZone = e.IsEnemyInZone;
-        currentEnemy = e.EnemyObject?.transform.parent.GetComponent<BaseEnemy>();
+        currentEnemy = e.EnemyObject?.transform.parent.GetComponent<IDamageable>();
     }
 
     public bool IsEnemyInAttackZone()
@@ -252,9 +283,9 @@ public class PlayerController : BasePlayer
 
     public void ApplyDamageToEnemy()
     {
-        if (currentEnemy != null && currentEnemy.TryGetComponent<IDamageable>(out var enemyHealth))
+        if (currentEnemy != null)
         {
-            enemyHealth.TakeDamage(10);
+            currentEnemy.TakeDamage(10);
         }
     }
     #endregion
