@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemDropData
 {
     public GameObject itemPrefab;
-    public float dropRate; // Tỷ lệ rơi từ 0 đến 1
+    public float dropRate; 
     public int minAmount = 1;
     public int maxAmount = 3;
 }
@@ -39,12 +39,6 @@ public class ItemDrop : MonoBehaviour
         GameObject item = Instantiate(itemPrefab, transform.position, Quaternion.identity);
         
         Rigidbody2D rb = item.GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            rb = item.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 1f;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        }
 
         Vector2 randomDirection = new Vector2(
             Random.Range(-spreadForce, spreadForce),

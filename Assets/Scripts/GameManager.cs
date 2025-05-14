@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; }
 
-    // Sự kiện khi số coin thay đổi
     public event Action<int> OnCoinsChanged;
 
     private const string COINS_KEY = "PlayerCoins";
@@ -39,7 +38,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern implementation
         if (Instance == null)
         {
             Instance = this;
@@ -157,7 +155,6 @@ public class GameManager : MonoBehaviour
     {
         if (amount <= 0) return;
         CurrentCoins += amount;
-        Debug.Log($"Added {amount} coins. Total: {CurrentCoins}");
     }
 
     // Trừ coin (ví dụ: khi mua item)
@@ -174,6 +171,8 @@ public class GameManager : MonoBehaviour
     public void ResetCoins()
     {
         CurrentCoins = 0;
+        PlayerPrefs.DeleteKey(COINS_KEY);
+        PlayerPrefs.Save();
         Debug.Log("Coins reset to 0");
     }
 } 

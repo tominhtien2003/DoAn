@@ -28,7 +28,7 @@ public class EnemyHealth : MonoBehaviour , IDamageable
 
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        //Debug.Log($"Enemy took {amount} damage. HP: {currentHealth}/{maxHealth}");
+        Debug.Log($"Enemy took {amount} damage. HP: {currentHealth}/{maxHealth}");
         healthImage.fillAmount = (float)currentHealth / maxHealth;
         SetHealthBarVisible(true);
 
@@ -51,7 +51,7 @@ public class EnemyHealth : MonoBehaviour , IDamageable
 
         if (itemDrop != null)
         {
-            Debug.Log("Enemy drop items.");
+            //Debug.Log("Enemy drop items.");
             itemDrop.DropItems();
         }
 

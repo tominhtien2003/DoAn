@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour , IDamageable
 {
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private float maxHealth = 100;
     [SerializeField] private Animator animator;
     [SerializeField] private Image healthImage;
     private float currentHealth;
@@ -13,6 +13,12 @@ public class PlayerHealth : MonoBehaviour , IDamageable
     {
         currentHealth = maxHealth;
     }
+    public void IncreaseMaxHealth(float amount)
+    {
+        maxHealth += amount;
+        Debug.Log($"Max health increased by {amount}. New max health: {maxHealth}");
+    }
+
     public void TakeDamage(float amount)
     {
         if (IsDead) return;
@@ -32,7 +38,7 @@ public class PlayerHealth : MonoBehaviour , IDamageable
     public void Heal(float amount)
     {
         if (IsDead) return;
-        Debug.Log($"Player healed {amount} health. HP: {currentHealth}/{maxHealth}");
+        //Debug.Log($"Player healed {amount} health. HP: {currentHealth}/{maxHealth}");
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         healthImage.fillAmount = currentHealth / maxHealth;
     }

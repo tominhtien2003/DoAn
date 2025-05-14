@@ -8,18 +8,15 @@ public class UICoinDisplay : MonoBehaviour
     private void Start()
     {
         coinText = GetComponent<TextMeshProUGUI>();
-        // Đăng ký sự kiện thay đổi coin
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnCoinsChanged += UpdateCoinDisplay;
-            // Cập nhật lần đầu
             UpdateCoinDisplay(GameManager.Instance.CurrentCoins);
         }
     }
 
     private void OnDestroy()
     {
-        // Hủy đăng ký sự kiện khi object bị destroy
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnCoinsChanged -= UpdateCoinDisplay;

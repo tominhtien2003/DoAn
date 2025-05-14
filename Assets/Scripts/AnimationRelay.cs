@@ -32,12 +32,12 @@ public class AnimationRelay : MonoBehaviour
     }
     public void OnDie()
     {
-        Debug.Log("Die");
+        //Debug.Log("Die");
         enemy.enabled = false;
     }
     public void OnDestroyWhenDeath()
     {
-        Debug.Log("destroy");
+        //Debug.Log("destroy");
         Destroy(enemy.gameObject);
     }
     public void StartHurt()

@@ -43,6 +43,7 @@ public class PlayerController : BasePlayer
     public bool IsAttacking { get; set; } = false;
     public bool IsRunningAnimation { get; set; } = false;
     [SerializeField] private float attackCooldown = 1f;
+    public float damage = 10f;
 
     private bool isWallSliding;
 
@@ -140,6 +141,16 @@ public class PlayerController : BasePlayer
     #endregion
 
     #region Input Handlers
+    public void OnTab(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            foreach (var inventoryPanel in InventoryManager.Instance.inventoryPanels)
+            {
+                inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+            }
+        }
+    }
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.canceled)
@@ -285,7 +296,7 @@ public class PlayerController : BasePlayer
     {
         if (currentEnemy != null)
         {
-            currentEnemy.TakeDamage(10);
+            currentEnemy.TakeDamage(damage);
         }
     }
     #endregion

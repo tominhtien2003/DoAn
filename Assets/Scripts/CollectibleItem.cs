@@ -8,7 +8,7 @@ public class CollectibleItem : MonoBehaviour
     [SerializeField] private float magnetSpeed = 10f; // Tốc độ hút
     [SerializeField] private LayerMask groundLayer; // Layer của mặt đất
     [SerializeField] private float groundCheckDistance = 0.1f; // Khoảng cách kiểm tra mặt đất
-
+    public InventoryItem inventoryItem;
     private bool isBeingMagneted = false;
     private bool isGrounded = false;
     private Transform playerTransform;
@@ -19,19 +19,10 @@ public class CollectibleItem : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         itemCollider = GetComponent<CircleCollider2D>();
-        
-        // Thiết lập Rigidbody2D
-        if (rb != null)
-        {
-            rb.gravityScale = 1f;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            rb.freezeRotation = true; // Khóa xoay
-        }
     }
 
     private void Update()
     {
-        // Kiểm tra xem vật phẩm có chạm đất không
         CheckGrounded();
 
         // Nếu đã chạm đất, tắt gravity và khóa vị trí
@@ -64,14 +55,14 @@ public class CollectibleItem : MonoBehaviour
             groundCheckDistance,
             groundLayer
         );
-
+        //Debug.Log(hit.point);
         if (hit.collider != null)
         {
             isGrounded = true;
             // Điều chỉnh vị trí để vật phẩm nằm trên mặt đất
             transform.position = new Vector3(
                 transform.position.x,
-                hit.point.y + itemCollider.radius,
+                hit.point.y + itemCollider.radius/2,
                 transform.position.z
             );
         }
@@ -109,11 +100,15 @@ public class CollectibleItem : MonoBehaviour
                 break;
             case ItemType.Blood:
                 // Hồi máu cho player
-                var playerHealth = player.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.Heal(value);
-                }
+                //var playerHealth = player.GetComponent<PlayerHealth>();
+                //if (playerHealth != null)
+                //{
+                //    playerHealth.Heal(value);
+                //}
+                InventoryManager.Instance.AddItem(inventoryItem);
+                break;
+            case ItemType.Gem:
+                InventoryManager.Instance.AddItem(inventoryItem);
                 break;
         }
 
@@ -132,9 +127,3 @@ public class CollectibleItem : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
     }
 }
-
-public enum ItemType
-{
-    Coin,
-    Blood
-} 
