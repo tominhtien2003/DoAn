@@ -28,10 +28,8 @@ public class GameManager : MonoBehaviour
         private set
         {
             currentCoins = value;
-            // Lưu coin vào PlayerPrefs
             PlayerPrefs.SetInt(COINS_KEY, currentCoins);
             PlayerPrefs.Save();
-            // Kích hoạt sự kiện
             OnCoinsChanged?.Invoke(currentCoins);
         }
     }
@@ -42,7 +40,6 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            // Load số coin đã lưu
             currentCoins = PlayerPrefs.GetInt(COINS_KEY, 0);
         }
         else
@@ -53,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Initialize game state
+        //PlayerStats.Instance.RestoreDefaultStats();
         SetGameState(GameState.MainMenu);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -65,7 +62,6 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Nếu scene được load là một map (có chứa "Map" trong tên)
         if (scene.name.Contains("Map"))
         {
             SetGameState(GameState.Playing);
@@ -150,14 +146,12 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.MainMenu);
     }
 
-    // Thêm coin
     public void AddCoins(int amount)
     {
         if (amount <= 0) return;
         CurrentCoins += amount;
     }
 
-    // Trừ coin (ví dụ: khi mua item)
     public bool SpendCoins(int amount)
     {
         if (amount <= 0 || amount > CurrentCoins) return false;
@@ -167,7 +161,6 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    // Reset coin (ví dụ: khi chơi lại từ đầu)
     public void ResetCoins()
     {
         CurrentCoins = 0;

@@ -16,6 +16,10 @@ public class SceneLoaderHandler : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Scene currentScene = SceneManager.GetActiveScene();
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.ResetStats();
+        }
         if (currentScene.name == "Menu")
         {
             GameManager.Instance.SetGameState(GameManager.GameState.MainMenu);

@@ -43,7 +43,6 @@ public class PlayerController : BasePlayer
     public bool IsAttacking { get; set; } = false;
     public bool IsRunningAnimation { get; set; } = false;
     [SerializeField] private float attackCooldown = 1f;
-    public float damage = 10f;
 
     private bool isWallSliding;
 
@@ -296,7 +295,7 @@ public class PlayerController : BasePlayer
     {
         if (currentEnemy != null)
         {
-            currentEnemy.TakeDamage(damage);
+            currentEnemy.TakeDamage(PlayerStats.Instance.Damage);
         }
     }
     #endregion

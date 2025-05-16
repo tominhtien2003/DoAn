@@ -4,6 +4,7 @@ public abstract class BaseEnemy : MonoBehaviour
 {
     [SerializeField] protected Animator enemyAnimator;
     [SerializeField] protected float walkSpeed;
+    [SerializeField] protected float damage = 10f;
 
     public Rigidbody2D rb { get; set; }
     public float MoveDirection { get; set; }

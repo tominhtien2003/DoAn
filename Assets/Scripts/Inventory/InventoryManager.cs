@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class InventoryManager : MonoBehaviour
 
     [SerializeField] private int maxSlots = 24;
     public GameObject shopUI;
+    public GameObject gameOverUI;
+    public GameObject panelNextMap;
+    public Image healImage;
     public GameObject[] inventoryPanels;
     private List<InventoryItem> items = new List<InventoryItem>();
     

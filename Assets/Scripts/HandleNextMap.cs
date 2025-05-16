@@ -4,12 +4,11 @@ using System.Text.RegularExpressions;
 
 public class HandleNextMap : MonoBehaviour
 {
-    [SerializeField] private GameObject panelNextMap;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            panelNextMap.SetActive(true);
+            InventoryManager.Instance.panelNextMap.SetActive(true);
         }
     }
     public void OnAsk()
@@ -27,6 +26,8 @@ public class HandleNextMap : MonoBehaviour
 
             if (Application.CanStreamedLevelBeLoaded(nextSceneName))
             {
+                UIMapCreate.UnlockMap(nextMapNumber);
+                
                 SceneManager.LoadScene(nextSceneName);
             }
             else

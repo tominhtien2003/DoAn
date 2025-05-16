@@ -34,7 +34,6 @@ public class PlayerStats : MonoBehaviour
 
     private void LoadStats()
     {
-        // Lưu giá trị mặc định nếu chưa có
         if (!PlayerPrefs.HasKey(DEFAULT_HEALTH))
         {
             PlayerPrefs.SetInt(DEFAULT_HEALTH, defaultMaxHealth);
@@ -43,7 +42,6 @@ public class PlayerStats : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        // Load stats đã lưu
         MaxHealth = PlayerPrefs.GetInt(HEALTH_KEY, defaultMaxHealth);
         Damage = PlayerPrefs.GetInt(DAMAGE_KEY, defaultDamage);
     }
@@ -66,13 +64,16 @@ public class PlayerStats : MonoBehaviour
 
     public void ResetStats()
     {
+        OnHealthUpgraded?.Invoke(MaxHealth);
+        OnDamageUpgraded?.Invoke(Damage);
+    }
+    public void RestoreDefaultStats()
+    {
         MaxHealth = PlayerPrefs.GetInt(DEFAULT_HEALTH, defaultMaxHealth);
         Damage = defaultDamage;
-        
         PlayerPrefs.SetInt(HEALTH_KEY, MaxHealth);
         PlayerPrefs.SetInt(DAMAGE_KEY, Damage);
         PlayerPrefs.Save();
-
         OnHealthUpgraded?.Invoke(MaxHealth);
         OnDamageUpgraded?.Invoke(Damage);
     }

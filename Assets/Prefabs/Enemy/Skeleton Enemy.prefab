@@ -575,6 +575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyAnimator: {fileID: 2037583594890772013}
   walkSpeed: 1
+  damage: 10
   player: {fileID: 0}
   attackZone: {fileID: 2461255660318111818}
   pointLeftLimit: {fileID: 1302987739369856189}

@@ -32,7 +32,6 @@ public class ShopSystem : MonoBehaviour
         {
             if (GameManager.Instance.SpendCoins(healthUpgradeCost))
             {
-                PlayerStats.Instance.UpgradeHealth(healthUpgradeAmount);
                 playerHealth.IncreaseMaxHealth(healthUpgradeAmount);
                 return true;
             }
@@ -47,7 +46,6 @@ public class ShopSystem : MonoBehaviour
             if (GameManager.Instance.SpendCoins(damageUpgradeCost))
             {
                 PlayerStats.Instance.UpgradeDamage(damageUpgradeAmount);
-                playerHealth.GetComponent<PlayerController>().damage = PlayerStats.Instance.Damage;
                 return true;
             }
         }

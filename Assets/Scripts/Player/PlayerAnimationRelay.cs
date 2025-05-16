@@ -40,4 +40,9 @@ public class PlayerAnimationRelay : MonoBehaviour
     {
         AudioManager.Instance.PlaySound("Hurt");
     }
+    public void OnEndAnimationDie()
+    {
+        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+        InventoryManager.Instance.gameOverUI.SetActive(true);
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour , IWeaponRanged
 {
     [SerializeField] private float speed = 5f;
+    [SerializeField] private float damage = 15f;
     [SerializeField] private float lifetime ;
     [SerializeField] private LayerMask playerLayer;
     public float MoveDirection { get; set; }
@@ -46,11 +47,11 @@ public class Arrow : MonoBehaviour , IWeaponRanged
     {
         if (((1 << collision.gameObject.layer) & playerLayer) != 0)
         {
-            //Debug.Log("Hit enemy: " + collision.gameObject.name);
-            Transform parentTransform = collision.transform.parent;
+            Debug.Log("Hit enemy: " + collision.gameObject.name);
+            Transform parentTransform = collision.transform;
             if (parentTransform != null && parentTransform.TryGetComponent<IDamageable>(out var damageable))
             {
-                damageable.TakeDamage(10);
+                damageable.TakeDamage(damage);
                 Destroy(gameObject);
             }
         }

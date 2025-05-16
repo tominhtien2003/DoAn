@@ -90,7 +90,7 @@ public class KnightEnemy : BaseEnemy , IPatrolEnemy
         if (player.TryGetComponent<IDamageable>(out var playerHealth))
         {
             //Debug.Log("Apply damage to player");
-            playerHealth.TakeDamage(10);
+            playerHealth.TakeDamage(damage);
         }
     }
 }
