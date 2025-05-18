@@ -140,6 +140,16 @@ public class PlayerController : BasePlayer
     #endregion
 
     #region Input Handlers
+    public void OnHeal(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.UseItem("2"); 
+            }
+        }
+    }
     public void OnTab(InputAction.CallbackContext context)
     {
         if (context.started)

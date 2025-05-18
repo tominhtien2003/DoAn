@@ -564,6 +564,12 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Music Fighting Boss
+    clip: {fileID: 8300000, guid: 787b92fd2af784944ac5cc21258fd1de, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
 --- !u!4 &205073524
 Transform:
   m_ObjectHideFlags: 0

@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 6306352704126495902}
   - component: {fileID: 7765075812554730474}
   - component: {fileID: 534205760099647841}
+  - component: {fileID: 620483801382673922}
   m_Layer: 7
   m_Name: Archer Enemy
   m_TagString: Untagged
@@ -297,6 +298,33 @@ MonoBehaviour:
   pointRightLimit: {fileID: 4229459982568087432}
   patrolIdleTime: 1.5
   AttackCooldown: 2
+--- !u!114 &620483801382673922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536728481911974531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0fa7762e6069484a87fee6d202adcd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleDrops:
+  - itemPrefab: {fileID: 3872779932730595241, guid: 1ad38cb7e4571ee41894cb75408b1644, type: 3}
+    dropRate: 0.9
+    minAmount: 1
+    maxAmount: 10
+  - itemPrefab: {fileID: 5357611456296479176, guid: 493e4f4d94d718144a43a651520a608e, type: 3}
+    dropRate: 0.4
+    minAmount: 1
+    maxAmount: 1
+  - itemPrefab: {fileID: 8303719776786387236, guid: f6cade9be951229448c76ffcc834ef99, type: 3}
+    dropRate: 0.1
+    minAmount: 1
+    maxAmount: 1
+  dropForce: 2
+  spreadForce: 2
 --- !u!1 &3223093869035929293
 GameObject:
   m_ObjectHideFlags: 0

@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 336466573329221637}
   m_Layer: 6
   m_Name: Player 1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -209,9 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986c5de88c587764a9e93f9a14035cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
   animator: {fileID: 2077347853485772680}
-  healthImage: {fileID: 0}
 --- !u!114 &7465734323496694635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,8 +256,9 @@ MonoBehaviour:
   rb: {fileID: 2752501206439472733}
   playerGFX: {fileID: 1414529422417317266}
   moveSpeed: 5
-  jumpImpulse: 9
+  jumpImpulse: 7
   attackZone: {fileID: 4029996447651593858}
+  maxJumps: 2
   dashSpeed: 7
   dashDuration: 0.4
   dashCooldown: 0.7
@@ -401,10 +400,14 @@ MonoBehaviour:
     m_ActionId: 901cef57-1cd3-4d06-8263-6417e8f08b81
     m_ActionName: 'Player/Dash[/Keyboard/leftShift]'
   - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d2b53a13-9d30-4870-8049-56dac2ab4159
+    m_ActionName: 'Player/Croach[/Keyboard/s]'
+  - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1613305159728093510}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnCrouch
+        m_MethodName: OnTab
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -414,8 +417,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: d2b53a13-9d30-4870-8049-56dac2ab4159
-    m_ActionName: 'Player/Croach[/Keyboard/s]'
+    m_ActionId: b8a64f97-e9db-4af1-bfd8-d7a7ba68f353
+    m_ActionName: 'Player/Inventory[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1613305159728093510}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnHeal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e7f51748-8073-4a3a-84b2-40e8ba4ac94d
+    m_ActionName: 'Player/Heal[/Keyboard/r]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

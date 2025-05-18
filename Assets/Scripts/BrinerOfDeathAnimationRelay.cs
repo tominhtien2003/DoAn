@@ -28,6 +28,7 @@ public class BrinerOfDeathAnimationRelay : MonoBehaviour
     }
     public void OnDie()
     {
+        AudioManager.Instance.StartPlaylist();
         boss.enabled = false;
     }
     public void OnDestroyWhenDeath()

@@ -507,6 +507,7 @@ GameObject:
   - component: {fileID: 2747526541226989757}
   - component: {fileID: 364989193447743222}
   - component: {fileID: 8730165680683542471}
+  - component: {fileID: -7633302770669994822}
   m_Layer: 7
   m_Name: Skeleton Enemy
   m_TagString: Untagged
@@ -597,3 +598,30 @@ MonoBehaviour:
   maxHealth: 20
   animator: {fileID: 2037583594890772013}
   healthImage: {fileID: 7472394831660065055}
+--- !u!114 &-7633302770669994822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613457284235123101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0fa7762e6069484a87fee6d202adcd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleDrops:
+  - itemPrefab: {fileID: 3872779932730595241, guid: 1ad38cb7e4571ee41894cb75408b1644, type: 3}
+    dropRate: 0.9
+    minAmount: 1
+    maxAmount: 10
+  - itemPrefab: {fileID: 5357611456296479176, guid: 493e4f4d94d718144a43a651520a608e, type: 3}
+    dropRate: 0.4
+    minAmount: 1
+    maxAmount: 1
+  - itemPrefab: {fileID: 8303719776786387236, guid: f6cade9be951229448c76ffcc834ef99, type: 3}
+    dropRate: 0.1
+    minAmount: 1
+    maxAmount: 1
+  dropForce: 2
+  spreadForce: 2

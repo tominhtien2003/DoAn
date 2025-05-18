@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         PlayerStats.Instance.OnHealthUpgraded += OnMaxHealthUpgraded;
     }
-
     private void OnDestroy()
     {
         if (PlayerStats.Instance != null)
@@ -87,5 +87,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         Debug.Log("Player died.");
         AudioManager.Instance.PlaySound("Death");
         animator?.SetTrigger(AnimationUtilities.DIE);
+        StartCoroutine(HandleGameOverDelay());
+    }
+    private IEnumerator HandleGameOverDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+        InventoryManager.Instance.gameOverUI.SetActive(true);
     }
 }

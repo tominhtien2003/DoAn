@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //PlayerStats.Instance.RestoreDefaultStats();
+        //GameManager.Instance.ResetCoins();
+        //UIMapCreate.ResetMapProgress();
         SetGameState(GameState.MainMenu);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }

@@ -21,6 +21,7 @@ public class BrinerofDeathBoss : MonoBehaviour
     [SerializeField] private GameObject darkOrbPrefab;
     [SerializeField] private int orbsPerAttack = 3;
     [SerializeField] private float orbSpawnDelay = 0.2f;
+    [SerializeField] private float damage = 50f;
 
     // State Machine
     private BrinerofDeathStateMachine stateMachine;
@@ -46,6 +47,7 @@ public class BrinerofDeathBoss : MonoBehaviour
         darkOrbCooldownTimer = darkOrbAttackCooldown;
         if (meleeAttackZone != null)
             meleeAttackZone.OnPlayerZoneChanged += MeleeAttackZone_OnPlayerZoneChanged;
+        AudioManager.Instance.PlayMusic("Music Fighting Boss");
     }
 
     private void Update()
@@ -156,7 +158,7 @@ public class BrinerofDeathBoss : MonoBehaviour
     {
         if (player.TryGetComponent<IDamageable>(out var playerHealth))
         {
-            playerHealth.TakeDamage(15);
+            playerHealth.TakeDamage(damage);
         }
     }
 
